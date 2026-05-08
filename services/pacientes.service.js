@@ -1,7 +1,8 @@
 import * as pacientesData from '../data/pacientes.data.js';
 
-export const getAllPacientes = async () => {
-    return await pacientesData.getAllPacientes();
+export const getAllPacientes = async (page = 1, limit = 10) => {
+    const offset = (page - 1) * limit;
+    return await pacientesData.getAllPacientes(limit, offset);
 };
 
 export const getPacienteById = async (id) => {

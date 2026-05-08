@@ -3,7 +3,10 @@ import * as pacientesService from '../services/pacientes.service.js';
 
 export const getPacientes = async (req, res) => {
     try {
-        const rows = await pacientesService.getAllPacientes();
+        const page = parseInt(req.query.page) || 1; 
+        const limit = parseInt(req.query.limit) || 10;
+
+        const rows = await pacientesService.getAllPacientes(page, limit);
         res.json(rows);
     } catch (error) {
         console.error(error);

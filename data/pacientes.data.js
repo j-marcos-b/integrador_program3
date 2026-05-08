@@ -1,7 +1,10 @@
 import db from '../config/db.js';
 
-export const getAllPacientes = async () => {
-    const [rows] = await db.query('SELECT * FROM pacientes');
+export const getAllPacientes = async (limit = 10, offset = 0) => {
+    const [rows] = await db.query(
+        'SELECT * FROM pacientes LIMIT ? OFFSET ?', 
+        [Number(limit), Number(offset)]
+    );
     return rows;
 };
 

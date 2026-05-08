@@ -9,8 +9,8 @@ import pacientesRoutes from './routes/pacientes.routes.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(helmet()); // Protege las cabeceras HTTP
-app.use(cors());   // Habilita peticiones desde otros dominios
+app.use(helmet()); 
+app.use(cors());  
 app.use(express.json()); 
 app.use(morgan('dev'));
 
@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
     res.json({ mensaje: 'Bienvenido a la API de la Clínica Médica' });
 });
 
-app.use('/api/v1/pacientes', pacientesRoutes); // Agregamos "v1" para el versionado
+app.use('/api/v1/pacientes', pacientesRoutes);
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
