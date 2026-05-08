@@ -7,6 +7,7 @@ import './config/db.js';
 import pacientesRoutes from './routes/pacientes.routes.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger.js';
+import { errorHandler } from './middlewares/error.middleware.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +24,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/v1/pacientes', pacientesRoutes);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
