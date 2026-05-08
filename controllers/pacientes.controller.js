@@ -1,9 +1,9 @@
 import { validationResult } from 'express-validator';
-import * as pacientesData from '../data/pacientes.data.js';
+import * as pacientesService from '../services/pacientes.service.js';
 
 export const getPacientes = async (req, res) => {
     try {
-        const rows = await pacientesData.getAllPacientes();
+        const rows = await pacientesService.getAllPacientes();
         res.json(rows);
     } catch (error) {
         console.error(error);
@@ -14,7 +14,7 @@ export const getPacientes = async (req, res) => {
 export const getPacienteById = async (req, res) => {
     try {
         const { id } = req.params;
-        const paciente = await pacientesData.getPacienteById(id);
+        const paciente = await pacientesService.getPacienteById(id);
 
         if (!paciente) {
             return res.status(404).json({ message: 'Paciente no encontrado' });
@@ -36,7 +36,7 @@ export const createPaciente = async (req, res) => {
 
         const { id_usuario, id_obra_social } = req.body;
 
-        const insertId = await pacientesData.createPaciente(id_usuario, id_obra_social);
+        const insertId = await pacientesService.createPaciente(id_usuario, id_obra_social);
 
         res.status(201).json({
             message: 'Paciente creado exitosamente',
@@ -60,7 +60,7 @@ export const updatePaciente = async (req, res) => {
         const { id } = req.params;
         const { id_usuario, id_obra_social } = req.body;
 
-        const actualizado = await pacientesData.updatePaciente(id, id_usuario, id_obra_social);
+        const actualizado = await pacientesService.updatePaciente(id, id_usuario, id_obra_social);
 
         if (!actualizado) {
             return res.status(404).json({ message: 'Paciente no encontrado' });
@@ -76,7 +76,7 @@ export const updatePaciente = async (req, res) => {
 export const deletePaciente = async (req, res) => {
     try {
         const { id } = req.params;
-        const borrado = await pacientesData.deletePaciente(id);
+        const borrado = await pacientesService.deletePaciente(id);
 
         if (!borrado) {
             return res.status(404).json({ message: 'Paciente no encontrado' });
