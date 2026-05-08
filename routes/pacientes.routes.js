@@ -14,24 +14,37 @@ const router = Router();
  * @swagger
  * components:
  *   schemas:
- *     Paciente:
+ *     PacienteInput:
  *       type: object
  *       required:
  *         - id_usuario
  *         - id_obra_social
  *       properties:
- *         id_paciente:
- *           type: integer
- *           description: ID autogenerado del paciente
  *         id_usuario:
  *           type: integer
- *           description: ID del usuario asociado al paciente
+ *           description: ID del usuario asociado al paciente.
  *         id_obra_social:
  *           type: integer
- *           description: ID de la obra social del paciente
+ *           description: ID de la obra social del paciente.
  *       example:
  *         id_usuario: 5
  *         id_obra_social: 2
+ *     Paciente:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: ID autogenerado del paciente
+ *         usuarioId:
+ *           type: integer
+ *           description: ID del usuario asociado al paciente
+ *         obraSocialId:
+ *           type: integer
+ *           description: ID de la obra social del paciente
+ *       example:
+ *         id: 1
+ *         usuarioId: 5
+ *         obraSocialId: 2
  */
 
 /**
@@ -54,6 +67,12 @@ const router = Router();
  *     responses:
  *       200:
  *         description: Lista de pacientes obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Paciente'
  */
 router.get('/', getPacientes);
 
@@ -73,6 +92,10 @@ router.get('/', getPacientes);
  *     responses:
  *       200:
  *         description: Paciente encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Paciente'
  *       404:
  *         description: Paciente no encontrado
  */
@@ -89,10 +112,14 @@ router.get('/:id', getPacienteById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Paciente'
+ *             $ref: '#/components/schemas/PacienteInput'
  *     responses:
  *       201:
  *         description: Paciente creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Paciente'
  *       400:
  *         description: Error de validación en los datos enviados
  */
@@ -116,7 +143,7 @@ router.post('/', validarPaciente, createPaciente);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Paciente'
+ *             $ref: '#/components/schemas/PacienteInput'
  *     responses:
  *       200:
  *         description: Paciente actualizado exitosamente

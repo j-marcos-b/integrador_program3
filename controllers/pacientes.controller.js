@@ -30,12 +30,12 @@ export const createPaciente = async (req, res) => {
 
     const insertId = await pacientesService.createPaciente(id_usuario, id_obra_social);
 
-    res.status(201).json({
-        message: 'Paciente creado exitosamente',
-        id_paciente: insertId,
-        id_usuario,
-        id_obra_social
-    });
+    const nuevoPacienteDto = {
+        id: insertId,
+        usuarioId: id_usuario,
+        obraSocialId: id_obra_social,
+    };
+    res.status(201).json(nuevoPacienteDto);
 };
 
 export const updatePaciente = async (req, res) => {

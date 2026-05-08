@@ -1,12 +1,15 @@
 import * as pacientesData from '../data/pacientes.data.js';
+import { toPacienteDto, toPacientesDto } from '../dtos/paciente.dto.js';
 
 export const getAllPacientes = async (page = 1, limit = 10) => {
     const offset = (page - 1) * limit;
-    return await pacientesData.getAllPacientes(limit, offset);
+    const pacientes = await pacientesData.getAllPacientes(limit, offset);
+    return toPacientesDto(pacientes);
 };
 
 export const getPacienteById = async (id) => {
-    return await pacientesData.getPacienteById(id);
+    const paciente = await pacientesData.getPacienteById(id);
+    return toPacienteDto(paciente);
 };
 
 export const createPaciente = async (id_usuario, id_obra_social) => {
