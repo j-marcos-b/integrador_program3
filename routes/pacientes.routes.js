@@ -17,18 +17,38 @@ const router = Router();
  *     PacienteInput:
  *       type: object
  *       required:
- *         - id_usuario
+ *         - documento
+ *         - apellido
+ *         - nombres
+ *         - email
+ *         - contrasenia
  *         - id_obra_social
  *       properties:
- *         id_usuario:
- *           type: integer
- *           description: ID del usuario asociado al paciente.
+ *         documento:
+ *           type: string
+ *           description: Documento del paciente.
+ *         apellido:
+ *           type: string
+ *           description: Apellido del paciente.
+ *         nombres:
+ *           type: string
+ *           description: Nombres del paciente.
+ *         email:
+ *           type: string
+ *           description: Correo electrónico del paciente.
+ *         contrasenia:
+ *           type: string
+ *           description: Contraseña del usuario.
  *         id_obra_social:
  *           type: integer
  *           description: ID de la obra social del paciente.
  *       example:
- *         id_usuario: 5
- *         id_obra_social: 2
+ *         documento: "12345678"
+ *         apellido: "Gomez"
+ *         nombres: "Juan"
+ *         email: "juan@example.com"
+ *         contrasenia: "123456"
+ *         id_obra_social: 1
  *     Paciente:
  *       type: object
  *       properties:

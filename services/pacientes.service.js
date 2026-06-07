@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import * as pacientesData from '../data/pacientes.data.js';
 import { toPacienteDto, toPacientesDto } from '../dtos/paciente.dto.js';
 
@@ -12,12 +13,18 @@ export const getPacienteById = async (id) => {
     return toPacienteDto(paciente);
 };
 
-export const createPaciente = async (id_usuario, id_obra_social) => {
-    return await pacientesData.createPaciente(id_usuario, id_obra_social);
+export const createPaciente = async (pacienteData) => {
+    const contraseniaHash = crypto.createHash('sha256').update(pacienteData.contrasenia).digest('hex');
+    const dataConHash = { ...pacienteData, contrasenia: contraseniaHash };
+    
+    return await pacientesData.createPaciente(dataConHash);
 };
 
-export const updatePaciente = async (id, id_usuario, id_obra_social) => {
-    return await pacientesData.updatePaciente(id, id_usuario, id_obra_social);
+export const updatePaciente = async (id, pacienteData) => {
+    const contraseniaHash = crypto.createHash('sha256').update(pacienteData.contrasenia).digest('hex');
+    const dataConHash = { ...pacienteData, contrasenia: contraseniaHash };
+    
+    return await pacientesData.updatePaciente(id, dataConHash);
 };
 
 export const deletePaciente = async (id) => {

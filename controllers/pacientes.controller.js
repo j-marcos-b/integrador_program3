@@ -26,16 +26,15 @@ export const createPaciente = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { id_usuario, id_obra_social } = req.body;
+    try {
+        const insertId = await pacientesService.createPaciente(req.body);
 
-    const insertId = await pacientesService.createPaciente(id_usuario, id_obra_social);
-
-    const nuevoPacienteDto = {
-        id: insertId,
-        usuarioId: id_usuario,
-        obraSocialId: id_obra_social,
-    };
-    res.status(201).json(nuevoPacienteDto);
+        const nuevoPaciente = await pacientesService.getPacienteById(insertId);
+        res.status(201).json(nuevoPaciente);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al crear el paciente' });
+    }
 };
 
 export const updatePaciente = async (req, res) => {
@@ -45,15 +44,19 @@ export const updatePaciente = async (req, res) => {
     }
 
     const { id } = req.params;
-    const { id_usuario, id_obra_social } = req.body;
 
-    const actualizado = await pacientesService.updatePaciente(id, id_usuario, id_obra_social);
+    try {
+        const actualizado = await pacientesService.updatePaciente(id, req.body);
 
-    if (!actualizado) {
-        return res.status(404).json({ message: 'Paciente no encontrado' });
+        if (!actualizado) {
+            return res.status(404).json({ message: 'Paciente no encontrado' });
+        }
+
+        res.json({ message: 'Paciente actualizado exitosamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al actualizar el paciente' });
     }
-
-    res.json({ message: 'Paciente actualizado exitosamente' });
 };
 
 export const deletePaciente = async (req, res) => {
