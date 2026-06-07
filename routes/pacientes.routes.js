@@ -38,13 +38,35 @@ const router = Router();
  *         usuarioId:
  *           type: integer
  *           description: ID del usuario asociado al paciente
- *         obraSocialId:
- *           type: integer
- *           description: ID de la obra social del paciente
+ *         nombres:
+ *           type: string
+ *           description: Nombres del paciente
+ *         apellido:
+ *           type: string
+ *           description: Apellido del paciente
+ *         email:
+ *           type: string
+ *           description: Email del paciente
+ *         obraSocial:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: integer
+ *             descripcion:
+ *               type: string
+ *         foto:
+ *           type: string
+ *           description: Ruta de la foto de perfil
  *       example:
  *         id: 1
  *         usuarioId: 5
- *         obraSocialId: 2
+ *         nombres: "Jacinto"
+ *         apellido: "Lopez"
+ *         email: "lopjac@correo.com"
+ *         obraSocial:
+ *           id: 1
+ *           descripcion: "Jerárquicos"
+ *         foto: ""
  */
 
 /**

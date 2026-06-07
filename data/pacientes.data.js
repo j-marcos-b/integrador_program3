@@ -2,14 +2,14 @@ import db from '../config/db.js';
 
 export const getAllPacientes = async (limit = 10, offset = 0) => {
     const [rows] = await db.query(
-        'SELECT * FROM pacientes LIMIT ? OFFSET ?', 
+        'SELECT * FROM v_pacientes LIMIT ? OFFSET ?', 
         [Number(limit), Number(offset)]
     );
     return rows;
 };
 
 export const getPacienteById = async (id) => {
-    const [rows] = await db.query('SELECT * FROM pacientes WHERE id_paciente = ?', [id]);
+    const [rows] = await db.query('SELECT * FROM v_pacientes WHERE id_paciente = ?', [id]);
     return rows[0]; 
 };
 

@@ -8,7 +8,14 @@ export const toPacienteDto = (paciente) => {
     return {
         id: paciente.id_paciente,
         usuarioId: paciente.id_usuario,
-        obraSocialId: paciente.id_obra_social,
+        nombres: paciente.nombres,
+        apellido: paciente.apellido,
+        email: paciente.email,
+        obraSocial: {
+            id: paciente.id_obra_social,
+            descripcion: paciente.descripcion_obra_social
+        },
+        foto: paciente.foto_path
     };
 };
 
