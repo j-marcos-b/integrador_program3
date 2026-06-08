@@ -34,7 +34,6 @@ export const createMedico = async (medicoData) => {
     
     await db.beginTransaction();
     try {
-        // Insertar en usuarios con rol = 1 (Médico)
         const [userResult] = await db.query(
             'INSERT INTO usuarios (documento, apellido, nombres, email, contrasenia, foto_path, rol, activo) VALUES (?, ?, ?, ?, ?, ?, 1, 1)',
             [documento, apellido, nombres, email, contrasenia, foto_path]

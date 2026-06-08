@@ -5,6 +5,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import './config/db.js';
 import pacientesRoutes from './routes/pacientes.routes.js';
+import medicosRoutes from './routes/medicos.routes.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger.js';
 import { errorHandler } from './middlewares/error.middleware.js';
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/v1/pacientes', pacientesRoutes);
+app.use('/api/v1/medicos', medicosRoutes);
 
 app.use(errorHandler);
 
