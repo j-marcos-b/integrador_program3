@@ -8,6 +8,7 @@ import pacientesRoutes from './routes/pacientes.routes.js';
 import medicosRoutes from './routes/medicos.routes.js';
 import obrasSocialesRoutes from './routes/obras_sociales.routes.js';
 import especialidadesRoutes from './routes/especialidades.routes.js';
+import turnosRoutes from './routes/turnos.routes.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger.js';
 import { errorHandler } from './middlewares/error.middleware.js';
@@ -30,6 +31,7 @@ app.use('/api/v1/pacientes', pacientesRoutes);
 app.use('/api/v1/medicos', medicosRoutes);
 app.use('/api/v1/obras-sociales', obrasSocialesRoutes);
 app.use('/api/v1/especialidades', especialidadesRoutes);
+app.use('/api/v1/turnos', turnosRoutes);
 
 app.use(errorHandler);
 
