@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as turnosController from '../controllers/turnos.controller.js';
 import { validateCreateTurno } from '../validators/turnos.validator.js';
+import { verifyToken, checkRole } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
@@ -13,9 +14,27 @@ const router = Router();
 
 /**
  * @swagger
+ * /turnos/mis-turnos:
+ *   get:
+ *     summary: Obtiene los turnos propios del Paciente o Médico logueado
+ *     tags: [Turnos]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de turnos propios
+ *       403:
+ *         description: No autorizado
+ */
+router.get('/mis-turnos', verifyToken, checkRole([1, 2]), turnosController.getMisTurnos);
+
+/**
+ * @swagger
  * /turnos:
  *   get:
  *     summary: Obtiene todos los turnos (paginado)
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Turnos]
  *     parameters:
  *       - in: query
@@ -28,13 +47,15 @@ const router = Router();
  *       200:
  *         description: Lista de turnos
  */
-router.get('/', turnosController.getTurnos);
+router.get('/', verifyToken, checkRole([3]), turnosController.getTurnos);
 
 /**
  * @swagger
  * /turnos/{id}:
  *   get:
  *     summary: Obtiene un turno por su ID
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Turnos]
  *     parameters:
  *       - in: path
@@ -45,13 +66,15 @@ router.get('/', turnosController.getTurnos);
  *       200:
  *         description: Turno encontrado
  */
-router.get('/:id', turnosController.getTurnoById);
+router.get('/:id', verifyToken, turnosController.getTurnoById);
 
 /**
  * @swagger
  * /turnos:
  *   post:
  *     summary: Crea un nuevo turno
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Turnos]
  *     requestBody:
  *       required: true
@@ -70,13 +93,15 @@ router.get('/:id', turnosController.getTurnoById);
  *       201:
  *         description: Turno creado
  */
-router.post('/', validateCreateTurno, turnosController.createTurno);
+router.post('/', verifyToken, checkRole([2, 3]), validateCreateTurno, turnosController.createTurno);
 
 /**
  * @swagger
  * /turnos/{id}:
  *   put:
  *     summary: Actualiza un turno
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Turnos]
  *     parameters:
  *       - in: path
@@ -100,13 +125,34 @@ router.post('/', validateCreateTurno, turnosController.createTurno);
  *       200:
  *         description: Turno actualizado
  */
-router.put('/:id', validateCreateTurno, turnosController.updateTurno);
+router.put('/:id', verifyToken, checkRole([3]), validateCreateTurno, turnosController.updateTurno);
+
+/**
+ * @swagger
+ * /turnos/{id}/atendido:
+ *   patch:
+ *     summary: Marca un turno como atendido (Solo Médico)
+ *     tags: [Turnos]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     responses:
+ *       200:
+ *         description: Turno marcado como atendido
+ */
+router.patch('/:id/atendido', verifyToken, checkRole([1]), turnosController.marcarAtendido);
 
 /**
  * @swagger
  * /turnos/{id}:
  *   delete:
  *     summary: Elimina un turno (Soft Delete)
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Turnos]
  *     parameters:
  *       - in: path
@@ -117,6 +163,6 @@ router.put('/:id', validateCreateTurno, turnosController.updateTurno);
  *       200:
  *         description: Turno eliminado
  */
-router.delete('/:id', turnosController.deleteTurno);
+router.delete('/:id', verifyToken, checkRole([3]), turnosController.deleteTurno);
 
 export default router;

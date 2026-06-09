@@ -16,6 +16,36 @@ export const getTurnoById = async (id) => {
     return rows[0];
 };
 
+export const getTurnosByPacienteUsuario = async (id_usuario) => {
+    const [rows] = await db.query(
+        `SELECT tr.id_turno_reserva, tr.fecha_hora, tr.valor_total, tr.atentido,
+                m.id_medico, u.nombres AS medico_nombres, u.apellido AS medico_apellido, e.nombre AS especialidad
+         FROM turnos_reservas tr
+         JOIN pacientes p ON tr.id_paciente = p.id_paciente
+         JOIN medicos m ON tr.id_medico = m.id_medico
+         JOIN usuarios u ON m.id_usuario = u.id_usuario
+         JOIN especialidades e ON m.id_especialidad = e.id_especialidad
+         WHERE p.id_usuario = ? AND tr.activo = 1`,
+        [id_usuario]
+    );
+    return rows;
+};
+
+export const getTurnosByMedicoUsuario = async (id_usuario) => {
+    const [rows] = await db.query(
+        `SELECT tr.id_turno_reserva, tr.fecha_hora, tr.valor_total, tr.atentido,
+                p.id_paciente, u.nombres AS paciente_nombres, u.apellido AS paciente_apellido, os.nombre AS obra_social
+         FROM turnos_reservas tr
+         JOIN medicos m ON tr.id_medico = m.id_medico
+         JOIN pacientes p ON tr.id_paciente = p.id_paciente
+         JOIN usuarios u ON p.id_usuario = u.id_usuario
+         JOIN obras_sociales os ON tr.id_obra_social = os.id_obra_social
+         WHERE m.id_usuario = ? AND tr.activo = 1`,
+        [id_usuario]
+    );
+    return rows;
+};
+
 export const createTurno = async (turnoData) => {
     const { id_medico, id_paciente, id_obra_social, fecha_hora, valor_total, atentido = 0 } = turnoData;
     const [result] = await db.query(
@@ -30,6 +60,14 @@ export const updateTurno = async (id, turnoData) => {
     const [result] = await db.query(
         'UPDATE turnos_reservas SET id_medico = ?, id_paciente = ?, id_obra_social = ?, fecha_hora = ?, valor_total = ?, atentido = ? WHERE id_turno_reserva = ?',
         [id_medico, id_paciente, id_obra_social, fecha_hora, valor_total, atentido, id]
+    );
+    return result.affectedRows > 0;
+};
+
+export const marcarAtendido = async (id) => {
+    const [result] = await db.query(
+        'UPDATE turnos_reservas SET atentido = 1 WHERE id_turno_reserva = ?',
+        [id]
     );
     return result.affectedRows > 0;
 };

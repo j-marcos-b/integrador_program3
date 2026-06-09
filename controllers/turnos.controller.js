@@ -1,5 +1,6 @@
 import { validationResult } from 'express-validator';
 import * as turnosService from '../services/turnos.service.js';
+import * as turnosData from '../data/turnos.data.js';
 
 export const getTurnos = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -60,4 +61,38 @@ export const deleteTurno = async (req, res) => {
     const { id } = req.params;
     const borrado = await turnosService.deleteTurno(id);
     borrado ? res.status(200).json({ message: 'Turno eliminado' }) : res.status(404).json({ message: 'Turno no encontrado' });
+};
+
+export const marcarAtendido = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const actualizado = await turnosService.marcarAtendido(id);
+        if (!actualizado) return res.status(404).json({ message: 'Turno no encontrado' });
+        res.json({ message: 'Turno marcado como atendido exitosamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al marcar el turno como atendido' });
+    }
+};
+
+export const getMisTurnos = async (req, res) => {
+    try {
+        const id_usuario = req.user.id_usuario;
+        const rol = req.user.id_rol;
+
+        let turnos = [];
+
+        if (rol === 1) {
+            turnos = await turnosData.getTurnosByMedicoUsuario(id_usuario);
+        } else if (rol === 2) {
+            turnos = await turnosData.getTurnosByPacienteUsuario(id_usuario);
+        } else {
+            return res.status(403).json({ message: 'Los administradores no tienen turnos propios.' });
+        }
+
+        res.status(200).json(turnos);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener los turnos propios' });
+    }
 };

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as especialidadesController from '../controllers/especialidades.controller.js';
 import { validateCreateEspecialidad } from '../validators/especialidades.validator.js';
+import { verifyToken, checkRole } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
@@ -16,6 +17,8 @@ const router = Router();
  * /especialidades:
  *   get:
  *     summary: Obtiene todas las especialidades (paginado)
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Especialidades]
  *     parameters:
  *       - in: query
@@ -28,7 +31,7 @@ const router = Router();
  *       200:
  *         description: Lista de especialidades
  */
-router.get('/', especialidadesController.getEspecialidades);
+router.get('/', verifyToken, especialidadesController.getEspecialidades);
 
 /**
  * @swagger
@@ -36,6 +39,8 @@ router.get('/', especialidadesController.getEspecialidades);
  *   get:
  *     summary: Obtiene una especialidad por su ID
  *     tags: [Especialidades]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -45,7 +50,7 @@ router.get('/', especialidadesController.getEspecialidades);
  *       200:
  *         description: Especialidad encontrada
  */
-router.get('/:id', especialidadesController.getEspecialidadById);
+router.get('/:id', verifyToken, especialidadesController.getEspecialidadById);
 
 /**
  * @swagger
@@ -53,6 +58,8 @@ router.get('/:id', especialidadesController.getEspecialidadById);
  *   post:
  *     summary: Crea una nueva especialidad
  *     tags: [Especialidades]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -65,7 +72,7 @@ router.get('/:id', especialidadesController.getEspecialidadById);
  *       201:
  *         description: Especialidad creada
  */
-router.post('/', validateCreateEspecialidad, especialidadesController.createEspecialidad);
+router.post('/', verifyToken, checkRole([3]), validateCreateEspecialidad, especialidadesController.createEspecialidad);
 
 /**
  * @swagger
@@ -73,6 +80,8 @@ router.post('/', validateCreateEspecialidad, especialidadesController.createEspe
  *   put:
  *     summary: Actualiza una especialidad
  *     tags: [Especialidades]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -90,7 +99,7 @@ router.post('/', validateCreateEspecialidad, especialidadesController.createEspe
  *       200:
  *         description: Especialidad actualizada
  */
-router.put('/:id', validateCreateEspecialidad, especialidadesController.updateEspecialidad);
+router.put('/:id', verifyToken, checkRole([3]), validateCreateEspecialidad, especialidadesController.updateEspecialidad);
 
 /**
  * @swagger
@@ -98,6 +107,8 @@ router.put('/:id', validateCreateEspecialidad, especialidadesController.updateEs
  *   delete:
  *     summary: Elimina una especialidad (Soft Delete)
  *     tags: [Especialidades]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -107,6 +118,6 @@ router.put('/:id', validateCreateEspecialidad, especialidadesController.updateEs
  *       200:
  *         description: Especialidad eliminada
  */
-router.delete('/:id', especialidadesController.deleteEspecialidad);
+router.delete('/:id', verifyToken, checkRole([3]), especialidadesController.deleteEspecialidad);
 
 export default router;

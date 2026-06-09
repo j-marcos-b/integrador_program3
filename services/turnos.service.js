@@ -20,6 +20,10 @@ export const updateTurno = async (id, turnoData) => {
     return await turnosData.updateTurno(id, turnoData);
 };
 
+export const marcarAtendido = async (id) => {
+    return await turnosData.marcarAtendido(id);
+};
+
 export const deleteTurno = async (id) => {
     return await turnosData.deleteTurno(id);
 };

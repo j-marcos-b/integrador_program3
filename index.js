@@ -10,6 +10,7 @@ import obrasSocialesRoutes from './routes/obras_sociales.routes.js';
 import especialidadesRoutes from './routes/especialidades.routes.js';
 import turnosRoutes from './routes/turnos.routes.js';
 import medicosObrasSocialesRoutes from './routes/medicos_obras_sociales.routes.js';
+import authRoutes from './routes/auth.routes.js'; // Rutas de autenticación
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger.js';
 import { errorHandler } from './middlewares/error.middleware.js';
@@ -34,6 +35,7 @@ app.use('/api/v1/obras-sociales', obrasSocialesRoutes);
 app.use('/api/v1/especialidades', especialidadesRoutes);
 app.use('/api/v1/turnos', turnosRoutes);
 app.use('/api/v1/medicos-obras-sociales', medicosObrasSocialesRoutes);
+app.use('/api/v1/auth', authRoutes); // Endpoint de Auth
 
 app.use(errorHandler);
 
