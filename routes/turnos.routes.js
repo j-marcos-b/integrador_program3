@@ -87,7 +87,6 @@ router.get('/:id', verifyToken, turnosController.getTurnoById);
  *               id_paciente: { type: integer, example: 1 }
  *               id_obra_social: { type: integer, example: 1 }
  *               fecha_hora: { type: string, format: date-time, example: "2026-04-01 17:00:00" }
- *               valor_total: { type: number, example: 4500.00 }
  *               atentido: { type: integer, example: 0 }
  *     responses:
  *       201:
@@ -119,7 +118,6 @@ router.post('/', verifyToken, checkRole([2, 3]), validateCreateTurno, turnosCont
  *               id_paciente: { type: integer, example: 1 }
  *               id_obra_social: { type: integer, example: 1 }
  *               fecha_hora: { type: string, format: date-time, example: "2026-04-01 17:00:00" }
- *               valor_total: { type: number, example: 4500.00 }
  *               atentido: { type: integer, example: 1 }
  *     responses:
  *       200:

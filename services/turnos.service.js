@@ -13,6 +13,21 @@ export const getTurnoById = async (id) => {
 };
 
 export const createTurno = async (turnoData) => {
+    // 1. Buscamos los datos para el cálculo
+    const { medico, obraSocial } = await turnosData.getDatosParaCalculo(turnoData.id_medico, turnoData.id_obra_social);
+    
+    if (medico && obraSocial) {
+        const valorConsulta = Number(medico.valor_consulta);
+        
+        // 2. Regla de negocio del TP
+        if (obraSocial.es_particular === 1) {
+            turnoData.valor_total = valorConsulta;
+        } else {
+            const porcentaje = Number(obraSocial.porcentaje_descuento) / 100;
+            turnoData.valor_total = valorConsulta - (porcentaje * valorConsulta);
+        }
+    }
+
     return await turnosData.createTurno(turnoData);
 };
 

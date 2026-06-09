@@ -46,6 +46,12 @@ export const getTurnosByMedicoUsuario = async (id_usuario) => {
     return rows;
 };
 
+export const getDatosParaCalculo = async (id_medico, id_obra_social) => {
+    const [medicoRows] = await db.query('SELECT valor_consulta FROM medicos WHERE id_medico = ?', [id_medico]);
+    const [obraRows] = await db.query('SELECT porcentaje_descuento, es_particular FROM obras_sociales WHERE id_obra_social = ?', [id_obra_social]);
+    return { medico: medicoRows[0], obraSocial: obraRows[0] };
+};
+
 export const createTurno = async (turnoData) => {
     const { id_medico, id_paciente, id_obra_social, fecha_hora, valor_total, atentido = 0 } = turnoData;
     const [result] = await db.query(
