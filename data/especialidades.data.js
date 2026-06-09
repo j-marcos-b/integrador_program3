@@ -19,7 +19,7 @@ export const getEspecialidadById = async (id) => {
 export const createEspecialidad = async (especialidadData) => {
     const { nombre } = especialidadData;
     const [result] = await db.query(
-        'INSERT INTO especialidades (nombre) VALUES (?)',
+        'INSERT INTO especialidades (nombre, activo) VALUES (?, 1)',
         [nombre]
     );
     return result.insertId;

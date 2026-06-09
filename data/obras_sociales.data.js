@@ -19,7 +19,7 @@ export const getObraSocialById = async (id) => {
 export const createObraSocial = async (obraData) => {
     const { nombre, descripcion, porcentaje_descuento, es_particular = 0 } = obraData;
     const [result] = await db.query(
-        'INSERT INTO obras_sociales (nombre, descripcion, porcentaje_descuento, es_particular) VALUES (?, ?, ?, ?)',
+        'INSERT INTO obras_sociales (nombre, descripcion, porcentaje_descuento, es_particular, activo) VALUES (?, ?, ?, ?, 1)',
         [nombre, descripcion, porcentaje_descuento, es_particular]
     );
     return result.insertId;

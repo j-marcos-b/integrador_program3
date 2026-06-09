@@ -19,7 +19,7 @@ export const getTurnoById = async (id) => {
 export const createTurno = async (turnoData) => {
     const { id_medico, id_paciente, id_obra_social, fecha_hora, valor_total, atentido = 0 } = turnoData;
     const [result] = await db.query(
-        'INSERT INTO turnos_reservas (id_medico, id_paciente, id_obra_social, fecha_hora, valor_total, atentido) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO turnos_reservas (id_medico, id_paciente, id_obra_social, fecha_hora, valor_total, atentido, activo) VALUES (?, ?, ?, ?, ?, ?, 1)',
         [id_medico, id_paciente, id_obra_social, fecha_hora, valor_total, atentido]
     );
     return result.insertId;
