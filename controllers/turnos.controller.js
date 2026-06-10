@@ -14,6 +14,16 @@ export const getTurnos = async (req, res) => {
     }
 };
 
+export const getEstadisticas = async (req, res) => {
+    try {
+        const estadisticas = await turnosService.getEstadisticas();
+        res.json(estadisticas);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener las estadísticas' });
+    }
+};
+
 export const getTurnoById = async (req, res) => {
     const { id } = req.params;
     try {

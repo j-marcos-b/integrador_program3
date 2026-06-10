@@ -8,6 +8,11 @@ export const getAllTurnos = async (limit = 10, offset = 0) => {
     return rows;
 };
 
+export const getEstadisticas = async () => {
+    const [rows] = await db.query('CALL sp_estadisticas_atenciones()');
+    return rows[0]; 
+};
+
 export const getTurnoById = async (id) => {
     const [rows] = await db.query(
         'SELECT * FROM turnos_reservas WHERE id_turno_reserva = ? AND activo = 1',

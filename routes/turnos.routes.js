@@ -14,6 +14,22 @@ const router = Router();
 
 /**
  * @swagger
+ * /turnos/estadisticas:
+ *   get:
+ *     summary: Obtiene estadísticas de atenciones y recaudación (Solo Administrador)
+ *     tags: [Turnos]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Estadísticas generadas por Stored Procedure
+ *       403:
+ *         description: Acceso denegado
+ */
+router.get('/estadisticas', verifyToken, checkRole([3]), turnosController.getEstadisticas);
+
+/**
+ * @swagger
  * /turnos/mis-turnos:
  *   get:
  *     summary: Obtiene los turnos propios del Paciente o Médico logueado

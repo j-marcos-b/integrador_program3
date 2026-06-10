@@ -7,19 +7,21 @@ export const getAllTurnos = async (page = 1, limit = 10) => {
     return toTurnosDto(turnos);
 };
 
+export const getEstadisticas = async () => {
+    return await turnosData.getEstadisticas();
+};
+
 export const getTurnoById = async (id) => {
     const turno = await turnosData.getTurnoById(id);
     return toTurnoDto(turno);
 };
 
 export const createTurno = async (turnoData) => {
-    // 1. Buscamos los datos para el cálculo
     const { medico, obraSocial } = await turnosData.getDatosParaCalculo(turnoData.id_medico, turnoData.id_obra_social);
     
     if (medico && obraSocial) {
         const valorConsulta = Number(medico.valor_consulta);
         
-        // 2. Regla de negocio del TP
         if (obraSocial.es_particular === 1) {
             turnoData.valor_total = valorConsulta;
         } else {
