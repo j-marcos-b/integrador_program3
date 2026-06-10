@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { validationResult } from 'express-validator';
 import * as pacientesService from '../services/pacientes.service.js';
 
@@ -23,15 +24,25 @@ export const getPacienteById = async (req, res) => {
 export const createPaciente = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        if (req.file) {
+            fs.unlinkSync(req.file.path);
+        }
         return res.status(400).json({ errors: errors.array() });
     }
 
     try {
+        if (req.file) {
+            req.body.foto_path = req.file.path.replace(/\\/g, '/');
+        }
+
         const insertId = await pacientesService.createPaciente(req.body);
 
         const nuevoPaciente = await pacientesService.getPacienteById(insertId);
         res.status(201).json(nuevoPaciente);
     } catch (error) {
+        if (req.file) {
+            fs.unlinkSync(req.file.path);
+        }
         console.error(error);
         res.status(500).json({ message: 'Error al crear el paciente' });
     }
@@ -40,20 +51,47 @@ export const createPaciente = async (req, res) => {
 export const updatePaciente = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        if (req.file) {
+            fs.unlinkSync(req.file.path);
+        }
         return res.status(400).json({ errors: errors.array() });
     }
 
     const { id } = req.params;
 
     try {
+        // 1. Buscamos el paciente viejo para saber si tenía foto antes de actualizar
+        const pacienteAntiguo = await pacientesService.getPacienteById(id);
+        if (!pacienteAntiguo) {
+            if (req.file) fs.unlinkSync(req.file.path);
+            return res.status(404).json({ message: 'Paciente no encontrado' });
+        }
+
+        if (req.file) {
+            req.body.foto_path = req.file.path.replace(/\\/g, '/');
+        }
+
         const actualizado = await pacientesService.updatePaciente(id, req.body);
 
         if (!actualizado) {
+            if (req.file) {
+                fs.unlinkSync(req.file.path);
+            }
             return res.status(404).json({ message: 'Paciente no encontrado' });
+        }
+
+        // 2. Si todo salió bien, subió foto nueva y tenía foto vieja, borramos la vieja
+        if (req.file && pacienteAntiguo.foto && pacienteAntiguo.foto.trim() !== '') {
+            if (fs.existsSync(pacienteAntiguo.foto)) {
+                fs.unlinkSync(pacienteAntiguo.foto);
+            }
         }
 
         res.json({ message: 'Paciente actualizado exitosamente' });
     } catch (error) {
+        if (req.file) {
+            fs.unlinkSync(req.file.path);
+        }
         console.error(error);
         res.status(500).json({ message: 'Error al actualizar el paciente' });
     }

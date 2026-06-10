@@ -7,6 +7,6 @@ export const validateCreateMedico = [
     check('email', 'Debe ser un email válido').isEmail(),
     check('contrasenia', 'La contraseña debe tener mínimo 6 caracteres').isLength({ min: 6 }),
     check('id_especialidad', 'La especialidad es obligatoria').isInt(),
-    check('matricula', 'La matrícula es obligatoria').notEmpty(),
+    check('matricula', 'La matrícula es obligatoria y debe ser numérica').isInt(),
     check('valor_consulta', 'El valor de la consulta es obligatorio y debe ser numérico').isNumeric()
 ];

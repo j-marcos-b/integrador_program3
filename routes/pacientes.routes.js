@@ -7,6 +7,7 @@ import {
     deletePaciente
 } from '../controllers/pacientes.controller.js';
 import { validarPaciente } from '../validators/pacientes.validator.js';
+import { upload } from '../middlewares/upload.middleware.js';
 
 const router = Router();
 
@@ -42,6 +43,9 @@ const router = Router();
  *         id_obra_social:
  *           type: integer
  *           description: ID de la obra social del paciente.
+ *         foto:
+ *           type: string
+ *           format: binary
  *       example:
  *         documento: "12345678"
  *         apellido: "Gomez"
@@ -152,7 +156,7 @@ router.get('/:id', getPacienteById);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             $ref: '#/components/schemas/PacienteInput'
  *     responses:
@@ -165,7 +169,7 @@ router.get('/:id', getPacienteById);
  *       400:
  *         description: Error de validación en los datos enviados
  */
-router.post('/', validarPaciente, createPaciente);
+router.post('/', upload.single('foto'), validarPaciente, createPaciente);
 
 /**
  * @swagger
@@ -183,7 +187,7 @@ router.post('/', validarPaciente, createPaciente);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             $ref: '#/components/schemas/PacienteInput'
  *     responses:
@@ -194,7 +198,7 @@ router.post('/', validarPaciente, createPaciente);
  *       404:
  *         description: Paciente no encontrado
  */
-router.put('/:id', validarPaciente, updatePaciente);
+router.put('/:id', upload.single('foto'), validarPaciente, updatePaciente);
 
 /**
  * @swagger

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as medicosController from '../controllers/medicos.controller.js';
 import { validateCreateMedico } from '../validators/medicos.validator.js';
+import { upload } from '../middlewares/upload.middleware.js';
 
 const router = Router();
 
@@ -63,7 +64,7 @@ router.get('/:id', medicosController.getMedicoById);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -72,16 +73,18 @@ router.get('/:id', medicosController.getMedicoById);
  *               nombres: { type: string, example: "Gregory" }
  *               email: { type: string, example: "house@hospital.com" }
  *               contrasenia: { type: string, example: "123456" }
- *               foto_path: { type: string, example: "http://example.com/foto.jpg" }
+ *               foto:
+ *                 type: string
+ *                 format: binary
  *               id_especialidad: { type: integer, example: 1 }
- *               matricula: { type: string, example: "MN-1234" }
+ *               matricula: { type: integer, example: 12345 }
  *               descripcion: { type: string, example: "Especialista en diagnóstico" }
  *               valor_consulta: { type: number, example: 5000.50 }
  *     responses:
  *       201:
  *         description: Médico creado con éxito
  */
-router.post('/', validateCreateMedico, medicosController.createMedico);
+router.post('/', upload.single('foto'), validateCreateMedico, medicosController.createMedico);
 
 /**
  * @swagger
@@ -98,15 +101,27 @@ router.post('/', validateCreateMedico, medicosController.createMedico);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
- *             # Mismas propiedades que el POST (omitidas aquí por brevedad)
+ *             properties:
+ *               documento: { type: string, example: "30123456" }
+ *               apellido: { type: string, example: "House" }
+ *               nombres: { type: string, example: "Gregory" }
+ *               email: { type: string, example: "house@hospital.com" }
+ *               contrasenia: { type: string, example: "123456" }
+ *               foto:
+ *                 type: string
+ *                 format: binary
+ *               id_especialidad: { type: integer, example: 1 }
+ *               matricula: { type: integer, example: 12345 }
+ *               descripcion: { type: string, example: "Especialista en diagnóstico" }
+ *               valor_consulta: { type: number, example: 5000.50 }
  *     responses:
  *       200:
  *         description: Médico actualizado
  */
-router.put('/:id', validateCreateMedico, medicosController.updateMedico);
+router.put('/:id', upload.single('foto'), validateCreateMedico, medicosController.updateMedico);
 
 /**
  * @swagger
