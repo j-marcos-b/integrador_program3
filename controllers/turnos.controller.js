@@ -1,3 +1,4 @@
+import PDFDocument from 'pdfkit';
 import { validationResult } from 'express-validator';
 import * as turnosService from '../services/turnos.service.js';
 import * as turnosData from '../data/turnos.data.js';
@@ -21,6 +22,46 @@ export const getEstadisticas = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error al obtener las estadísticas' });
+    }
+};
+
+export const generarReportePDF = async (req, res) => {
+    try {
+        const turnos = await turnosService.getDatosReportePDF();
+
+        // Configuramos la respuesta como un archivo descargable
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=reporte_turnos.pdf');
+
+        const doc = new PDFDocument({ margin: 50 });
+        doc.pipe(res);
+
+        // Título principal
+        doc.fontSize(20).text('Reporte General de Turnos', { align: 'center' });
+        doc.moveDown(1);
+        
+        // Cumpliendo consigna: "cantidad"
+        doc.fontSize(14).text(`Cantidad total de turnos activos: ${turnos.length}`);
+        doc.moveDown(2);
+
+        // Cumpliendo consigna: "pacientes, obras sociales, etc."
+        turnos.forEach(turno => {
+            const fecha = new Date(turno.fecha_hora).toLocaleDateString();
+            doc.fontSize(12).font('Helvetica-Bold').text(`Turno #${turno.id_turno_reserva} - Fecha: ${fecha}`);
+            doc.font('Helvetica').fontSize(10);
+            doc.text(`Paciente: ${turno.paciente_nombres} ${turno.paciente_apellido}`);
+            doc.text(`Obra Social: ${turno.obra_social}`);
+            doc.text(`Médico: Dr/a. ${turno.medico_apellido}`);
+            doc.text(`Valor Total: $${turno.valor_total}`);
+            doc.moveDown(1);
+        });
+
+        doc.end();
+    } catch (error) {
+        console.error(error);
+        if (!res.headersSent) {
+            res.status(500).json({ message: 'Error al generar el reporte en PDF' });
+        }
     }
 };
 

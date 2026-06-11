@@ -11,6 +11,10 @@ export const getEstadisticas = async () => {
     return await turnosData.getEstadisticas();
 };
 
+export const getDatosReportePDF = async () => {
+    return await turnosData.getDatosReportePDF();
+};
+
 export const getTurnoById = async (id) => {
     const turno = await turnosData.getTurnoById(id);
     return toTurnoDto(turno);

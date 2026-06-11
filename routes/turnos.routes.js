@@ -30,6 +30,25 @@ router.get('/estadisticas', verifyToken, checkRole([3]), turnosController.getEst
 
 /**
  * @swagger
+ * /turnos/reporte/pdf:
+ *   get:
+ *     summary: Descarga un informe en PDF de los turnos (Solo Administrador)
+ *     tags: [Turnos]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Archivo PDF generado
+ *         content:
+ *           application/pdf:
+ *             schema:
+ *               type: string
+ *               format: binary
+ */
+router.get('/reporte/pdf', verifyToken, checkRole([3]), turnosController.generarReportePDF);
+
+/**
+ * @swagger
  * /turnos/mis-turnos:
  *   get:
  *     summary: Obtiene los turnos propios del Paciente o Médico logueado

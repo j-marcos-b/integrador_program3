@@ -13,6 +13,24 @@ export const getEstadisticas = async () => {
     return rows[0]; 
 };
 
+export const getDatosReportePDF = async () => {
+    const query = `
+        SELECT tr.id_turno_reserva, tr.fecha_hora, tr.valor_total,
+               u_pac.nombres AS paciente_nombres, u_pac.apellido AS paciente_apellido,
+               os.nombre AS obra_social,
+               u_med.apellido AS medico_apellido
+        FROM turnos_reservas tr
+        JOIN pacientes p ON tr.id_paciente = p.id_paciente
+        JOIN usuarios u_pac ON p.id_usuario = u_pac.id_usuario
+        JOIN obras_sociales os ON tr.id_obra_social = os.id_obra_social
+        JOIN medicos m ON tr.id_medico = m.id_medico
+        JOIN usuarios u_med ON m.id_usuario = u_med.id_usuario
+        WHERE tr.activo = 1
+    `;
+    const [rows] = await db.query(query);
+    return rows;
+};
+
 export const getTurnoById = async (id) => {
     const [rows] = await db.query(
         'SELECT * FROM turnos_reservas WHERE id_turno_reserva = ? AND activo = 1',
